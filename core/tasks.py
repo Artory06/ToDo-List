@@ -16,3 +16,11 @@ def complete_task(tasks: dict[int, dict], task_id: int) -> dict | None:
         return tasks[task_id]
     except KeyError:
         return None
+
+def delete_task(tasks: dict[int, dict], task_id: int) -> dict | None:
+    try:
+        want_to_delete = tasks[task_id]
+        del tasks[task_id]
+        return want_to_delete
+    except KeyError:
+        return None
