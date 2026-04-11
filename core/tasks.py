@@ -9,3 +9,10 @@ def add_task(tasks: dict[int, dict], title: str, description: str | None = None)
 
 def list_tasks(tasks: dict[int, dict]) -> list[dict]:
     return list(tasks.values())
+
+def complete_task(tasks: dict[int, dict], task_id: int) -> dict | None:
+    try:
+        tasks[task_id]['is_completed'] = True
+        return tasks[task_id]
+    except KeyError:
+        return None
