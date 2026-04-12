@@ -9,6 +9,10 @@ class Task:
         self.is_completed = False
         self.created_at = datetime.datetime.now()
 
+    def __str__(self) -> str:
+        status = '✔' if self.is_completed else ' '
+        return f"[{status}] №{self.id} {self.title}"
+
     def complete(self) -> None:
         self.is_completed = True
 
