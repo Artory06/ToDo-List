@@ -20,6 +20,32 @@ class Task:
         self.title = new_title
 
 
+class TaskService:
+    def __init__(self) -> None:
+        self.tasks: dict[int, Task] = {}
+        self.next_id: int = 1
+
+    def add(self, title: str, description: str | None = None) -> Task:
+        task = Task(title, description)
+        task.id = self.next_id
+        self.next_id += 1
+        self.tasks[task.id] = task
+        return task
+
+    def list_all(self) -> list[Task]:
+        return list(self.tasks.values())
+
+    def complete(self, task_id: int) -> Task | None:
+        task = self.tasks.get(task_id)
+        if task is None:
+            return None
+        task.complete()
+        return task
+
+    def delete(self, task_id: int) -> Task | None:
+        return self.tasks.pop(task_id, None)
+        
+
 def add_task(
     tasks: dict[int, dict], title: str, description: str | None = None
 ) -> dict:
