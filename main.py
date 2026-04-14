@@ -1,8 +1,8 @@
-from core.tasks import add_task, delete_task, complete_task, list_tasks
+from core.tasks import TaskService, TaskNotFoundError
 
 
 def main():
-    tasks = {}
+    service = TaskService()
     while True:
         print("1. Добавить задачу")
         print("2. Показать список задач")
@@ -16,17 +16,16 @@ def main():
         elif choice == "1":
             title = input("Введите название задачи: ")
             description = input("Введите описание задачи (необязательно): ")
-            new_task = add_task(tasks, title, description)
-            print(f"Добавлена задача #{new_task['id']} - {new_task['title']}")
+            new_task = service.add(title, description)
+            print(f"Добавлена задача #{new_task.id} - {new_task.title}")
 
         elif choice == "2":
-            all_tasks = list_tasks(tasks)
+            all_tasks = service.list_all()
             if len(all_tasks) == 0:
                 print("Задач пока нет")
             else:
                 for task in all_tasks:
-                    status = "✔" if task["is_completed"] else " "
-                    print(f"{status} №{task['id']}: {task['title']}")
+                    print(task)
 
         elif choice == "3":
             try:
@@ -34,11 +33,11 @@ def main():
             except ValueError:
                 print("Введите корректный id")
                 continue
-            new_complete_task = complete_task(tasks, task_id)
-            if new_complete_task is None:
-                print("Задача не найдена")
-            else:
-                print(f"✔ Задача {new_complete_task['id']} - выполнена!")
+            try:
+                new_complete_task = service.complete(task_id)
+                print(f"Задача {new_complete_task.id} выполнена")
+            except TaskNotFoundError as e:
+                print(e)
 
         elif choice == "4":
             try:
@@ -46,11 +45,11 @@ def main():
             except ValueError:
                 print("Введите корректный id")
                 continue
-            new_delete_task = delete_task(tasks, task_id)
-            if new_delete_task is None:
-                print("Задача не найдена")
-            else:
-                print(f"Задача {new_delete_task['id']} - удалена!")
+            try:
+                new_delete_task = service.delete(task_id)
+                print(f"Задача {new_delete_task.id} удалена")
+            except TaskNotFoundError as e:
+                print(e)
 
         else:
             print("Такого действия нет")
