@@ -1,5 +1,9 @@
 import datetime
 
+class TaskNotFoundError(Exception):
+    pass
+
+
 
 class Task:
     def __init__(self, title: str, description: str | None = None) -> None:
@@ -35,16 +39,19 @@ class TaskService:
     def list_all(self) -> list[Task]:
         return list(self.tasks.values())
 
-    def complete(self, task_id: int) -> Task | None:
+    def complete(self, task_id: int) -> Task:
         task = self.tasks.get(task_id)
         if task is None:
-            return None
+            raise TaskNotFoundError(f'Задача {task_id} не найдена')
         task.complete()
         return task
 
-    def delete(self, task_id: int) -> Task | None:
-        return self.tasks.pop(task_id, None)
-        
+    def delete(self, task_id: int) -> Task:
+        task = self.tasks.pop(task_id, None)
+        if task is None:
+            raise TaskNotFoundError(f"Задача {task_id} не найдена")
+        return task
+
 
 def add_task(
     tasks: dict[int, dict], title: str, description: str | None = None
