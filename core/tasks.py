@@ -14,7 +14,7 @@ class Task:
         self.created_at = datetime.datetime.now()
 
     def __str__(self) -> str:
-        status = '✔' if self.is_completed else ' '
+        status = "✔" if self.is_completed else " "
         return f"[{status}] №{self.id} {self.title}"
 
     def complete(self) -> None:
@@ -42,7 +42,7 @@ class TaskService:
     def complete(self, task_id: int) -> Task:
         task = self.tasks.get(task_id)
         if task is None:
-            raise TaskNotFoundError(f'Задача {task_id} не найдена')
+            raise TaskNotFoundError(f"Задача {task_id} не найдена")
         task.complete()
         return task
 
@@ -52,5 +52,16 @@ class TaskService:
             raise TaskNotFoundError(f"Задача {task_id} не найдена")
         return task
 
+    def get(self, task_id: int) -> Task:
+        task = self.tasks.get(task_id)
+        if task is None:
+            raise TaskNotFoundError(f"Задача {task_id} не найдена")
+        return task
 
-
+    def update(self, task_id: int, title: str, description: str | None = None) -> Task:
+        task = self.tasks.get(task_id)
+        if task is None:
+            raise TaskNotFoundError(f"Задача {task_id} не найдена")
+        task.update_title(title)
+        task.description = description
+        return task
